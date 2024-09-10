@@ -32,34 +32,33 @@ export async function registerUser(req, res, next) {
   let user = await User.findOne({ email });
   if (user) {
     res.json({
-      success: true,
+      success: false,
       Message: "user already exits",
     });
   }
   const hashPassword = await bcrypt.hash(password, 10);
-  console.log(hashPassword);
+
   user = await User.create({ name, email, password: hashPassword });
-  console.log(user); 
+  console.log(user);
   sendcookie(res, user, "register successful", 201);
 }
 
-//my profile api 
-export async function getMyProfile(req, res, next) {
-  console.log(req.cookies);
-  const { token } = req.cookies;
-
-  const decode = jwt.verify(token, process.env.JWT_SECRET);
-  console.log(decode);
-
-  const user = await User.findById(decode._id);
-  if (!user) {
-    res.json({
-      success: true,
-      Message: "login first",
-    });
-  }
+//my profile api
+export function getMyProfile(req, res, next) {
   res.status(200).json({
     success: true,
-    user: user,
+    user: req.user,
   });
+}
+
+//logout api
+export function logoutUser(req, res) {
+  res
+    .cookie("token", null, {
+      expires: new Date(Date.now()),
+    })
+    .json({
+      success: true,
+      user: res.user,
+    });
 }
