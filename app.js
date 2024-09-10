@@ -1,6 +1,7 @@
 import express from "express";
 import { config } from "dotenv";
-import router from "./routes/user.js";
+import taskRouter from "./routes/task.js";
+import userRouter from "./routes/user.js";
 import cookieParser from "cookie-parser";
 
 export const app = express();
@@ -9,7 +10,8 @@ export const app = express();
 app.use(express.json());
 app.use(cookieParser());
 // routes
-app.use("/api/v1/", router);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/task", taskRouter);
 //config dotenv
 config({
   path: "./database/config.env",
