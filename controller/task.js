@@ -22,12 +22,7 @@ export const getAllTask = async function (req, res, next) {
 export const deleteTask = async function (req, res, next) {
   const { id } = req.params;
   const task = await Task.findById(id);
-  if (!task) {
-    return res.status(404).json({
-      success: false,
-      Message: "invailid Id",
-    });
-  }
+  if (!task) return next(new Error("Nice"));
   await task.deleteOne();
   res.status(200).json({
     success: true,
@@ -37,12 +32,7 @@ export const deleteTask = async function (req, res, next) {
 export const updateTask = async function (req, res, next) {
   const { id } = req.params;
   const task = await Task.findById(id);
-  if (!task) {
-    return res.status(404).json({
-      success: false,
-      Message: "invailid Id",
-    });
-  }
+  if (!task) return next(new Error("nice"));
   task.isCompleted = !task.isCompleted;
 
   await task.save();
